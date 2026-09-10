@@ -1,4 +1,4 @@
-import type { Citizen } from '@/services/citizensService'
+import type { Citizen } from '@/types/citizen'
 
 export const citizensMock: Citizen[] = [
   {

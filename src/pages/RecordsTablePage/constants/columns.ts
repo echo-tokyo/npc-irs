@@ -1,5 +1,5 @@
 import type { GridColDef } from '@mui/x-data-grid'
-import type { Citizen } from '@/services/citizensService'
+import type { Citizen } from '@/types/citizen'
 import { GENDER_LABELS, STATUS_LABELS } from '@/utils/citizenLabels'
 import { formatDate } from '@/utils/formatDate'
 

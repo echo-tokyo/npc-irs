@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { getDistricts } from '@/services/citizensService'
 
 export function useDistricts(): string[] {
-  const [districts, setDistricts] = useState<string[]>([])
+  const query = useQuery({
+    queryKey: ['districts'],
+    queryFn: getDistricts,
+  })
 
-  useEffect(() => {
-    getDistricts().then(setDistricts)
-  }, [])
-
-  return districts
+  return query.data ?? []
 }

@@ -68,7 +68,6 @@ export const theme = createTheme(
   },
   coreRuRU,
   dataGridRuRU,
-  // MUI пока не перевёл эту строку в ruRU (закомментирована в исходнике пакета) — переопределяем вручную.
   {
     components: {
       MuiDataGrid: {

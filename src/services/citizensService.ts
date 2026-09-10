@@ -1,25 +1,6 @@
+import { citizenDetailsMock } from '@/mocks/citizenDetails'
 import { citizensMock } from '@/mocks/citizens'
-
-export type Gender = 'male' | 'female'
-
-export type CitizenStatus = 'active' | 'archived' | 'pending'
-
-export type StatusFilter = CitizenStatus | 'all'
-
-export interface Citizen {
-  id: number
-  caseNumber: string
-  lastName: string
-  firstName: string
-  middleName: string
-  birthDate: string
-  gender: Gender
-  status: CitizenStatus
-  district: string
-  address: string
-  phone: string
-  registrationDate: string
-}
+import type { Citizen, CitizenDetails, StatusFilter } from '@/types/citizen'
 
 export interface CitizensFilter {
   search?: string
@@ -72,9 +53,24 @@ export async function getCitizens(
   return citizensMock.filter((citizen) => matchesFilter(citizen, filter))
 }
 
-export async function getCitizenById(id: number): Promise<Citizen | undefined> {
+export async function getCitizenDetails(
+  id: number,
+): Promise<CitizenDetails | undefined> {
   await delay(SIMULATED_LATENCY_MS)
-  return citizensMock.find((citizen) => citizen.id === id)
+  return citizenDetailsMock.find((citizen) => citizen.id === id)
+}
+
+export async function updateCitizenDetails(
+  details: CitizenDetails,
+): Promise<CitizenDetails> {
+  await delay(SIMULATED_LATENCY_MS)
+  const index = citizenDetailsMock.findIndex(
+    (citizen) => citizen.id === details.id,
+  )
+  if (index !== -1) {
+    citizenDetailsMock[index] = details
+  }
+  return details
 }
 
 export async function getDistricts(): Promise<string[]> {

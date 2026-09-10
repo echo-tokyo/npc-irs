@@ -1,29 +1,24 @@
-import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { DataGrid, type GridRowParams } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
-import { useCitizens } from '@/hooks/useCitizens'
-import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { useDistricts } from '@/hooks/useDistricts'
-import type { Citizen, StatusFilter } from '@/services/citizensService'
-import { recordsColumns } from './columns'
-import RecordsFilters from './RecordsFilters'
+import type { Citizen } from '@/types/citizen'
+import RecordsFilters from './components/RecordsFilters'
+import { recordsColumns } from './constants/columns'
+import { useCitizens } from './hooks/useCitizens'
+import { useRecordsTableFilters } from './hooks/useRecordsTableFilters'
 
 function RecordsTablePage() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [status, setStatus] = useState<StatusFilter>('all')
-  const [district, setDistrict] = useState('all')
-
-  const debouncedSearch = useDebouncedValue(search)
+  const filters = useRecordsTableFilters()
   const districts = useDistricts()
   const { citizens, isLoading } = useCitizens({
-    search: debouncedSearch,
-    status,
-    district,
+    search: filters.search,
+    status: filters.status,
+    district: filters.district,
   })
 
   function handleRowClick(params: GridRowParams<Citizen>) {
@@ -45,13 +40,13 @@ function RecordsTablePage() {
         }}
       >
         <RecordsFilters
-          search={search}
-          status={status}
-          district={district}
+          initialSearch={filters.search}
+          status={filters.status}
+          district={filters.district}
           districts={districts}
-          onSearchChange={setSearch}
-          onStatusChange={setStatus}
-          onDistrictChange={setDistrict}
+          onSearchChange={filters.setSearch}
+          onStatusChange={filters.setStatus}
+          onDistrictChange={filters.setDistrict}
         />
 
         <Typography variant='body2' color='text.secondary'>
@@ -66,9 +61,8 @@ function RecordsTablePage() {
             density='compact'
             disableRowSelectionOnClick
             onRowClick={handleRowClick}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 50, page: 0 } },
-            }}
+            paginationModel={filters.paginationModel}
+            onPaginationModelChange={filters.setPaginationModel}
             pageSizeOptions={[25, 50, 100]}
             sx={{ height: '100%', border: 'none', cursor: 'pointer' }}
           />

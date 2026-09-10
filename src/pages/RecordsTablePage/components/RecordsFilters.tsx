@@ -2,7 +2,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import type { ChangeEvent } from 'react'
-import type { StatusFilter } from '@/services/citizensService'
+import type { StatusFilter } from '@/types/citizen'
 import { STATUS_LABELS } from '@/utils/citizenLabels'
 
 const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
@@ -13,7 +13,7 @@ const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
 ]
 
 interface RecordsFiltersProps {
-  search: string
+  initialSearch: string
   status: StatusFilter
   district: string
   districts: string[]
@@ -23,7 +23,7 @@ interface RecordsFiltersProps {
 }
 
 function RecordsFilters({
-  search,
+  initialSearch,
   status,
   district,
   districts,
@@ -47,7 +47,7 @@ function RecordsFilters({
     <Stack direction='row' spacing={2} sx={{ flexWrap: 'wrap' }}>
       <TextField
         label='Поиск по ФИО или № дела'
-        value={search}
+        defaultValue={initialSearch}
         onChange={handleSearchChange}
         size='small'
         sx={{ minWidth: 260 }}
