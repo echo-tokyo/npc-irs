@@ -16,9 +16,6 @@ interface DraftFieldHandlers {
   handleDocumentsChange: (documents: DocumentRecord[]) => void
 }
 
-// useCallback здесь не для галочки: onChange уходит пропсом в memo()-компоненты
-// полей, и без стабильной ссылки memo бесполезен — перерисовывались бы все
-// поля вкладки на каждое нажатие клавиши (что и происходило до этого фикса).
 export function useDraftFieldHandlers(
   setEdits: Dispatch<SetStateAction<Partial<CitizenDetailsDraft>>>,
   currentContacts: ContactInfo | undefined,

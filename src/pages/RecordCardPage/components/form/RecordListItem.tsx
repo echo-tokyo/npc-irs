@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
@@ -24,9 +24,12 @@ function RecordListItem<T extends { id: string }>({
 }: RecordListItemProps<T>) {
   const errors = showErrors ? validateFields(fields, asFieldValues(item)) : {}
 
-  function handleChange(name: string, value: FormFieldValue) {
-    onFieldChange(item.id, name, value)
-  }
+  const handleChange = useCallback(
+    (name: string, value: FormFieldValue) => {
+      onFieldChange(item.id, name, value)
+    },
+    [item.id, onFieldChange],
+  )
 
   return (
     <Paper variant='outlined' sx={{ p: 2 }}>

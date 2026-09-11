@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
 import PageLoading from '@/components/PageLoading'
 
-// Каждая страница — свой JS-чанк, подгружаемый только при переходе на неё,
-// а не одним общим бандлом при первой загрузке приложения.
 const RecordsTablePage = lazy(() => import('@/pages/RecordsTablePage'))
 const RecordCardPage = lazy(() => import('@/pages/RecordCardPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))

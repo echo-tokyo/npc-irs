@@ -14,10 +14,6 @@ interface RecordListEditorProps<T extends { id: string }> {
   onChange: (items: T[]) => void
 }
 
-// handleFieldChange/handleRemove читают items/onChange из рефа и обёрнуты в
-// useCallback с пустыми зависимостями — ссылка должна быть неизменной, иначе
-// memo() на RecordListItem бесполезен и правка одной карточки перерисовывает
-// весь список.
 function RecordListEditor<T extends { id: string }>({
   items,
   fields,

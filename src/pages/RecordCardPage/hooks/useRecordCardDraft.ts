@@ -17,7 +17,6 @@ export type LazySectionsLoading = Record<
   boolean
 >
 
-// details = общие сведения + загруженное из кэша react-query + edits поверх.
 export function useRecordCardDraft(
   citizenId: number,
   initialGeneralInfo: CitizenGeneralInfo,

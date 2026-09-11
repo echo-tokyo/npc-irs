@@ -11,9 +11,6 @@ interface StableSaveReset {
 
 type UpdateMutation = ReturnType<typeof useUpdateCitizenDetails>
 
-// reset/save отдаются в memo()-шапку карточки, поэтому обёрнуты в
-// useCallback([]) и читают актуальные details/edits через реф — иначе их
-// ссылка менялась бы на каждое нажатие клавиши и ломала memo.
 export function useStableSaveReset(
   citizenId: number,
   details: CitizenDetailsDraft,

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
@@ -16,8 +16,6 @@ interface GeneralInfoExtraFieldsProps {
   onFieldChange: (name: string, value: FormFieldValue) => void
 }
 
-// Принимает конкретные поля, а не весь details — иначе правка на любой
-// другой вкладке пересоздавала бы этот блок без надобности.
 function GeneralInfoExtraFields({
   district,
   livesAtRegisteredAddress,
@@ -27,6 +25,11 @@ function GeneralInfoExtraFields({
   isDistrictsLoading,
   onFieldChange,
 }: GeneralInfoExtraFieldsProps) {
+  const handleDistrictChange = useCallback(
+    (value: string) => onFieldChange('district', value),
+    [onFieldChange],
+  )
+
   return (
     <>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -34,7 +37,7 @@ function GeneralInfoExtraFields({
           district={district}
           districts={districts}
           isLoading={isDistrictsLoading}
-          onChange={(value) => onFieldChange('district', value)}
+          onChange={handleDistrictChange}
         />
       </Grid>
 

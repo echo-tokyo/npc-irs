@@ -38,7 +38,6 @@ function RecordCardView({
     )
   }
 
-  // onSave уходит в memo()-шапку — без useCallback ссылка менялась бы каждый рендер.
   const handleSave = useCallback(() => {
     save(() => setIsSavedMessageOpen(true))
   }, [save])
