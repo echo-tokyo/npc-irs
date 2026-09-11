@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
@@ -45,4 +46,4 @@ function MultiSelectFormField({
   )
 }
 
-export default MultiSelectFormField
+export default memo(MultiSelectFormField)

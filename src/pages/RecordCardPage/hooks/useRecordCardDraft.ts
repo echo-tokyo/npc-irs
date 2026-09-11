@@ -1,91 +1,86 @@
 import { useState } from 'react'
-import { hasValidationErrors } from '../validateRecordCard'
+import {
+  getCitizenContacts,
+  getCitizenDocuments,
+  getCitizenEducation,
+  getCitizenFamilyMembers,
+} from '@/services/citizenDetailsService'
+import type { CitizenDetailsDraft, CitizenGeneralInfo } from '@/types/citizen'
+import type { TabValue } from '../constants/tabs'
+import { useCitizenSection } from './useCitizenSection'
+import { useDraftFieldHandlers } from './useDraftFieldHandlers'
+import { useStableSaveReset } from './useStableSaveReset'
 import { useUpdateCitizenDetails } from './useUpdateCitizenDetails'
-import type {
-  CitizenDetails,
-  DocumentRecord,
-  EducationRecord,
-  FamilyMember,
-} from '@/types/citizen'
-import type { FormFieldValue } from '@/types/formField'
 
-interface UseRecordCardDraftResult {
-  details: CitizenDetails
-  isDirty: boolean
-  showErrors: boolean
-  isSaving: boolean
-  handleFieldChange: (name: string, value: FormFieldValue) => void
-  handleContactsFieldChange: (name: string, value: FormFieldValue) => void
-  handleFamilyMembersChange: (members: FamilyMember[]) => void
-  handleEducationChange: (records: EducationRecord[]) => void
-  handleDocumentsChange: (documents: DocumentRecord[]) => void
-  reset: () => void
-  save: (onSaved: () => void) => void
-}
+export type LazySectionsLoading = Record<
+  'familyMembers' | 'education' | 'contacts' | 'documents',
+  boolean
+>
 
+// details = общие сведения + загруженное из кэша react-query + edits поверх.
 export function useRecordCardDraft(
-  initialDetails: CitizenDetails,
-): UseRecordCardDraftResult {
-  const [details, setDetails] = useState(initialDetails)
-  const [savedDetails, setSavedDetails] = useState(initialDetails)
-  const [showErrors, setShowErrors] = useState(false)
+  citizenId: number,
+  initialGeneralInfo: CitizenGeneralInfo,
+  visitedTabs: Set<TabValue>,
+) {
+  const familyQuery = useCitizenSection(
+    'citizenFamilyMembers',
+    citizenId,
+    visitedTabs.has('family'),
+    getCitizenFamilyMembers,
+  )
+  const educationQuery = useCitizenSection(
+    'citizenEducation',
+    citizenId,
+    visitedTabs.has('education'),
+    getCitizenEducation,
+  )
+  const contactsQuery = useCitizenSection(
+    'citizenContacts',
+    citizenId,
+    visitedTabs.has('contacts'),
+    getCitizenContacts,
+  )
+  const documentsQuery = useCitizenSection(
+    'citizenDocuments',
+    citizenId,
+    visitedTabs.has('documents'),
+    getCitizenDocuments,
+  )
+
+  const [edits, setEdits] = useState<Partial<CitizenDetailsDraft>>({})
   const updateMutation = useUpdateCitizenDetails()
+  const fieldHandlers = useDraftFieldHandlers(setEdits, contactsQuery.data)
 
-  const isDirty = JSON.stringify(details) !== JSON.stringify(savedDetails)
-
-  function handleFieldChange(name: string, value: FormFieldValue) {
-    setDetails((prev) => ({ ...prev, [name]: value }))
+  const details: CitizenDetailsDraft = {
+    ...initialGeneralInfo,
+    familyMembers: familyQuery.data,
+    education: educationQuery.data,
+    contacts: contactsQuery.data,
+    documents: documentsQuery.data,
+    ...edits,
   }
 
-  function handleContactsFieldChange(name: string, value: FormFieldValue) {
-    setDetails((prev) => ({
-      ...prev,
-      contacts: { ...prev.contacts, [name]: value },
-    }))
-  }
-
-  function handleFamilyMembersChange(familyMembers: FamilyMember[]) {
-    setDetails((prev) => ({ ...prev, familyMembers }))
-  }
-
-  function handleEducationChange(education: EducationRecord[]) {
-    setDetails((prev) => ({ ...prev, education }))
-  }
-
-  function handleDocumentsChange(documents: DocumentRecord[]) {
-    setDetails((prev) => ({ ...prev, documents }))
-  }
-
-  function reset() {
-    setDetails(savedDetails)
-    setShowErrors(false)
-  }
-
-  function save(onSaved: () => void) {
-    if (hasValidationErrors(details)) {
-      setShowErrors(true)
-      return
-    }
-
-    updateMutation.mutate(details, {
-      onSuccess: (saved) => {
-        setSavedDetails(saved)
-        setShowErrors(false)
-        onSaved()
-      },
-    })
-  }
+  const { showErrors, reset, save } = useStableSaveReset(
+    citizenId,
+    details,
+    edits,
+    setEdits,
+    updateMutation,
+  )
 
   return {
     details,
-    isDirty,
+    isDirty: Object.keys(edits).length > 0,
     showErrors,
     isSaving: updateMutation.isPending,
-    handleFieldChange,
-    handleContactsFieldChange,
-    handleFamilyMembersChange,
-    handleEducationChange,
-    handleDocumentsChange,
+    isLoading: {
+      familyMembers: familyQuery.isLoading,
+      education: educationQuery.isLoading,
+      contacts: contactsQuery.isLoading,
+      documents: documentsQuery.isLoading,
+    },
+    ...fieldHandlers,
     reset,
     save,
   }

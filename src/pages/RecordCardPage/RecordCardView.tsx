@@ -1,4 +1,4 @@
-import { useState, type SyntheticEvent } from 'react'
+import { useCallback, useState, type SyntheticEvent } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Snackbar from '@mui/material/Snackbar'
@@ -6,34 +6,51 @@ import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { useDistricts } from '@/hooks/useDistricts'
-import type { CitizenDetails } from '@/types/citizen'
+import type { CitizenGeneralInfo } from '@/types/citizen'
 import RecordCardHeader from './components/RecordCardHeader'
 import RecordCardTabContent from './components/RecordCardTabContent'
 import { TABS, type TabValue } from './constants/tabs'
 import { useRecordCardDraft } from './hooks/useRecordCardDraft'
 
 interface RecordCardViewProps {
-  initialDetails: CitizenDetails
+  citizenId: number
+  initialGeneralInfo: CitizenGeneralInfo
 }
 
-function RecordCardView({ initialDetails }: RecordCardViewProps) {
-  const districts = useDistricts()
-  const draft = useRecordCardDraft(initialDetails)
+function RecordCardView({
+  citizenId,
+  initialGeneralInfo,
+}: RecordCardViewProps) {
+  const { districts, isLoading: isDistrictsLoading } = useDistricts()
   const [activeTab, setActiveTab] = useState<TabValue>('general')
+  const [visitedTabs, setVisitedTabs] = useState<Set<TabValue>>(
+    () => new Set(['general']),
+  )
   const [isSavedMessageOpen, setIsSavedMessageOpen] = useState(false)
+
+  const draft = useRecordCardDraft(citizenId, initialGeneralInfo, visitedTabs)
+  const { save } = draft
 
   function handleTabChange(_event: SyntheticEvent, value: TabValue) {
     setActiveTab(value)
+    setVisitedTabs((prev) =>
+      prev.has(value) ? prev : new Set(prev).add(value),
+    )
   }
 
-  function handleSave() {
-    draft.save(() => setIsSavedMessageOpen(true))
-  }
+  // onSave уходит в memo()-шапку — без useCallback ссылка менялась бы каждый рендер.
+  const handleSave = useCallback(() => {
+    save(() => setIsSavedMessageOpen(true))
+  }, [save])
 
   return (
     <Stack spacing={2.5} sx={{ height: '100%' }}>
       <RecordCardHeader
-        details={draft.details}
+        lastName={draft.details.lastName}
+        firstName={draft.details.firstName}
+        middleName={draft.details.middleName}
+        caseNumber={draft.details.caseNumber}
+        status={draft.details.status}
         isDirty={draft.isDirty}
         isSaving={draft.isSaving}
         onReset={draft.reset}
@@ -58,7 +75,9 @@ function RecordCardView({ initialDetails }: RecordCardViewProps) {
             activeTab={activeTab}
             details={draft.details}
             districts={districts}
+            isDistrictsLoading={isDistrictsLoading}
             showErrors={draft.showErrors}
+            isLoading={draft.isLoading}
             onFieldChange={draft.handleFieldChange}
             onContactsFieldChange={draft.handleContactsFieldChange}
             onFamilyMembersChange={draft.handleFamilyMembersChange}

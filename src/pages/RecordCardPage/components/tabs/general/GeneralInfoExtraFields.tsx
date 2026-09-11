@@ -1,40 +1,41 @@
+import { memo } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
-import type { CitizenDetails } from '@/types/citizen'
 import type { FormFieldValue } from '@/types/formField'
+import DistrictField from './DistrictField'
 
 interface GeneralInfoExtraFieldsProps {
-  details: CitizenDetails
+  district: string
+  livesAtRegisteredAddress: boolean
+  actualAddress: string
+  note: string
   districts: string[]
+  isDistrictsLoading: boolean
   onFieldChange: (name: string, value: FormFieldValue) => void
 }
 
+// Принимает конкретные поля, а не весь details — иначе правка на любой
+// другой вкладке пересоздавала бы этот блок без надобности.
 function GeneralInfoExtraFields({
-  details,
+  district,
+  livesAtRegisteredAddress,
+  actualAddress,
+  note,
   districts,
+  isDistrictsLoading,
   onFieldChange,
 }: GeneralInfoExtraFieldsProps) {
   return (
     <>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <TextField
-          select
-          fullWidth
-          size='small'
-          label='Район'
-          value={details.district}
-          helperText=' '
-          onChange={(event) => onFieldChange('district', event.target.value)}
-        >
-          {districts.map((district) => (
-            <MenuItem key={district} value={district}>
-              {district}
-            </MenuItem>
-          ))}
-        </TextField>
+        <DistrictField
+          district={district}
+          districts={districts}
+          isLoading={isDistrictsLoading}
+          onChange={(value) => onFieldChange('district', value)}
+        />
       </Grid>
 
       <Grid
@@ -44,7 +45,7 @@ function GeneralInfoExtraFields({
         <FormControlLabel
           control={
             <Checkbox
-              checked={details.livesAtRegisteredAddress}
+              checked={livesAtRegisteredAddress}
               onChange={(event) =>
                 onFieldChange('livesAtRegisteredAddress', event.target.checked)
               }
@@ -54,13 +55,13 @@ function GeneralInfoExtraFields({
         />
       </Grid>
 
-      {!details.livesAtRegisteredAddress && (
+      {!livesAtRegisteredAddress && (
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <TextField
             fullWidth
             size='small'
             label='Фактический адрес'
-            value={details.actualAddress}
+            value={actualAddress}
             onChange={(event) =>
               onFieldChange('actualAddress', event.target.value)
             }
@@ -75,7 +76,7 @@ function GeneralInfoExtraFields({
           minRows={3}
           size='small'
           label='Примечание'
-          value={details.note}
+          value={note}
           onChange={(event) => onFieldChange('note', event.target.value)}
         />
       </Grid>
@@ -83,4 +84,4 @@ function GeneralInfoExtraFields({
   )
 }
 
-export default GeneralInfoExtraFields
+export default memo(GeneralInfoExtraFields)

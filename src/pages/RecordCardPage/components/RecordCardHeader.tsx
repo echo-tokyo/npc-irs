@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -6,11 +7,15 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
-import type { CitizenDetails } from '@/types/citizen'
+import type { CitizenStatus } from '@/types/citizen'
 import { STATUS_CHIP_COLORS, STATUS_LABELS } from '@/utils/citizenLabels'
 
 interface RecordCardHeaderProps {
-  details: CitizenDetails
+  lastName: string
+  firstName: string
+  middleName: string
+  caseNumber: string
+  status: CitizenStatus
   isDirty: boolean
   isSaving: boolean
   onReset: () => void
@@ -18,7 +23,11 @@ interface RecordCardHeaderProps {
 }
 
 function RecordCardHeader({
-  details,
+  lastName,
+  firstName,
+  middleName,
+  caseNumber,
+  status,
   isDirty,
   isSaving,
   onReset,
@@ -33,16 +42,13 @@ function RecordCardHeader({
       </IconButton>
       <Box sx={{ flex: 1 }}>
         <Typography variant='h5'>
-          {details.lastName} {details.firstName} {details.middleName}
+          {lastName} {firstName} {middleName}
         </Typography>
         <Typography variant='body2' color='text.secondary'>
-          № дела {details.caseNumber}
+          № дела {caseNumber}
         </Typography>
       </Box>
-      <Chip
-        label={STATUS_LABELS[details.status]}
-        color={STATUS_CHIP_COLORS[details.status]}
-      />
+      <Chip label={STATUS_LABELS[status]} color={STATUS_CHIP_COLORS[status]} />
       {isDirty && (
         <Button onClick={onReset} disabled={isSaving}>
           Сбросить
@@ -59,4 +65,4 @@ function RecordCardHeader({
   )
 }
 
-export default RecordCardHeader
+export default memo(RecordCardHeader)

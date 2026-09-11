@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { FormFieldConfig, FormFieldValue } from '@/types/formField'
 import CheckboxFormField from './fields/CheckboxFormField'
 import DateFormField from './fields/DateFormField'
@@ -77,4 +78,4 @@ function FormField({ config, value, error, onChange }: FormFieldProps) {
   }
 }
 
-export default FormField
+export default memo(FormField)

@@ -2,12 +2,13 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import { useParams } from 'react-router-dom'
-import { useCitizenDetails } from './hooks/useCitizenDetails'
+import { useCitizenGeneralInfo } from './hooks/useCitizenGeneralInfo'
 import RecordCardView from './RecordCardView'
 
 function RecordCardPage() {
   const { id } = useParams<{ id: string }>()
-  const { details, isLoading } = useCitizenDetails(Number(id))
+  const citizenId = Number(id)
+  const { generalInfo, isLoading } = useCitizenGeneralInfo(citizenId)
 
   if (isLoading) {
     return (
@@ -17,11 +18,17 @@ function RecordCardPage() {
     )
   }
 
-  if (!details) {
+  if (!generalInfo) {
     return <Typography variant='h6'>Запись не найдена</Typography>
   }
 
-  return <RecordCardView key={details.id} initialDetails={details} />
+  return (
+    <RecordCardView
+      key={generalInfo.id}
+      citizenId={citizenId}
+      initialGeneralInfo={generalInfo}
+    />
+  )
 }
 
 export default RecordCardPage

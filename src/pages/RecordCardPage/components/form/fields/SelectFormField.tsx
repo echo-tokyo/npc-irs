@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import type { FormFieldConfig } from '@/types/formField'
@@ -35,4 +36,4 @@ function SelectFormField({
   )
 }
 
-export default SelectFormField
+export default memo(SelectFormField)

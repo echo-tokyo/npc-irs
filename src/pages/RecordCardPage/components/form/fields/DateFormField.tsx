@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import dayjs from 'dayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import type { FormFieldConfig } from '@/types/formField'
@@ -30,4 +31,4 @@ function DateFormField({ config, value, error, onChange }: DateFormFieldProps) {
   )
 }
 
-export default DateFormField
+export default memo(DateFormField)

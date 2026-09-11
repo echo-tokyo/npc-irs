@@ -1,6 +1,6 @@
 import { useId, useRef } from 'react'
-import RecordListEditor from '@/components/form/RecordListEditor'
 import type { EducationRecord } from '@/types/citizen'
+import RecordListEditor from '../../form/RecordListEditor'
 import { EDUCATION_FIELDS } from './educationFields'
 
 interface EducationTabProps {

@@ -21,7 +21,6 @@ export type PreferredContactMethod = 'phone' | 'email' | 'mail'
 export type DocumentType =
   'passport' | 'snils' | 'inn' | 'birthCertificate' | 'driverLicense'
 
-// Строка в табличном представлении (картотека)
 export interface Citizen {
   id: number
   caseNumber: string
@@ -71,8 +70,7 @@ export interface DocumentRecord {
   issuedBy: string
 }
 
-// Полная карточка записи - используется на странице 2
-export interface CitizenDetails extends Citizen {
+export interface CitizenGeneralInfo extends Citizen {
   birthPlace: string
   snils: string
   inn: string
@@ -82,8 +80,18 @@ export interface CitizenDetails extends Citizen {
   actualAddress: string
   benefitCategories: BenefitCategory[]
   note: string
+}
+
+export interface CitizenDetails extends CitizenGeneralInfo {
   familyMembers: FamilyMember[]
   education: EducationRecord[]
   contacts: ContactInfo
   documents: DocumentRecord[]
+}
+
+export interface CitizenDetailsDraft extends CitizenGeneralInfo {
+  familyMembers?: FamilyMember[]
+  education?: EducationRecord[]
+  contacts?: ContactInfo
+  documents?: DocumentRecord[]
 }

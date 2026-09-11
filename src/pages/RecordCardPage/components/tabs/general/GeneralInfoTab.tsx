@@ -1,14 +1,15 @@
 import Grid from '@mui/material/Grid'
-import FormField from '@/components/form/FormField'
-import type { CitizenDetails } from '@/types/citizen'
+import type { CitizenGeneralInfo } from '@/types/citizen'
 import type { FormFieldValue } from '@/types/formField'
 import { asFieldValues, validateFields } from '@/utils/formValidation'
+import FormField from '../../form/FormField'
 import GeneralInfoExtraFields from './GeneralInfoExtraFields'
 import { GENERAL_FIELDS } from './generalFields'
 
 interface GeneralInfoTabProps {
-  details: CitizenDetails
+  details: CitizenGeneralInfo
   districts: string[]
+  isDistrictsLoading: boolean
   showErrors: boolean
   onFieldChange: (name: string, value: FormFieldValue) => void
 }
@@ -16,6 +17,7 @@ interface GeneralInfoTabProps {
 function GeneralInfoTab({
   details,
   districts,
+  isDistrictsLoading,
   showErrors,
   onFieldChange,
 }: GeneralInfoTabProps) {
@@ -30,7 +32,7 @@ function GeneralInfoTab({
           <FormField
             config={field}
             value={
-              details[field.name as keyof CitizenDetails] as FormFieldValue
+              details[field.name as keyof CitizenGeneralInfo] as FormFieldValue
             }
             error={errors[field.name]}
             onChange={onFieldChange}
@@ -39,8 +41,12 @@ function GeneralInfoTab({
       ))}
 
       <GeneralInfoExtraFields
-        details={details}
+        district={details.district}
+        livesAtRegisteredAddress={details.livesAtRegisteredAddress}
+        actualAddress={details.actualAddress}
+        note={details.note}
         districts={districts}
+        isDistrictsLoading={isDistrictsLoading}
         onFieldChange={onFieldChange}
       />
     </Grid>

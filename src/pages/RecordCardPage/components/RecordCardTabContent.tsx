@@ -1,22 +1,26 @@
 import type {
-  CitizenDetails,
+  CitizenDetailsDraft,
   DocumentRecord,
   EducationRecord,
   FamilyMember,
 } from '@/types/citizen'
 import type { FormFieldValue } from '@/types/formField'
 import type { TabValue } from '../constants/tabs'
+import type { LazySectionsLoading } from '../hooks/useRecordCardDraft'
 import ContactsTab from './tabs/contacts/ContactsTab'
 import DocumentsTab from './tabs/documents/DocumentsTab'
 import EducationTab from './tabs/education/EducationTab'
 import FamilyMembersTab from './tabs/family/FamilyMembersTab'
 import GeneralInfoTab from './tabs/general/GeneralInfoTab'
+import TabLoading from './tabs/shared/TabLoading'
 
 interface RecordCardTabContentProps {
   activeTab: TabValue
-  details: CitizenDetails
+  details: CitizenDetailsDraft
   districts: string[]
+  isDistrictsLoading: boolean
   showErrors: boolean
+  isLoading: LazySectionsLoading
   onFieldChange: (name: string, value: FormFieldValue) => void
   onContactsFieldChange: (name: string, value: FormFieldValue) => void
   onFamilyMembersChange: (members: FamilyMember[]) => void
@@ -28,7 +32,9 @@ function RecordCardTabContent({
   activeTab,
   details,
   districts,
+  isDistrictsLoading,
   showErrors,
+  isLoading,
   onFieldChange,
   onContactsFieldChange,
   onFamilyMembersChange,
@@ -41,11 +47,14 @@ function RecordCardTabContent({
         <GeneralInfoTab
           details={details}
           districts={districts}
+          isDistrictsLoading={isDistrictsLoading}
           showErrors={showErrors}
           onFieldChange={onFieldChange}
         />
       )
     case 'family':
+      if (isLoading.familyMembers || !details.familyMembers)
+        return <TabLoading />
       return (
         <FamilyMembersTab
           members={details.familyMembers}
@@ -54,6 +63,7 @@ function RecordCardTabContent({
         />
       )
     case 'education':
+      if (isLoading.education || !details.education) return <TabLoading />
       return (
         <EducationTab
           records={details.education}
@@ -62,6 +72,7 @@ function RecordCardTabContent({
         />
       )
     case 'contacts':
+      if (isLoading.contacts || !details.contacts) return <TabLoading />
       return (
         <ContactsTab
           contacts={details.contacts}
@@ -70,6 +81,7 @@ function RecordCardTabContent({
         />
       )
     case 'documents':
+      if (isLoading.documents || !details.documents) return <TabLoading />
       return (
         <DocumentsTab
           documents={details.documents}

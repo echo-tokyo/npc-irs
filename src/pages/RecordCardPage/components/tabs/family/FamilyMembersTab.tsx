@@ -1,6 +1,6 @@
 import { useId, useRef } from 'react'
-import RecordListEditor from '@/components/form/RecordListEditor'
 import type { FamilyMember } from '@/types/citizen'
+import RecordListEditor from '../../form/RecordListEditor'
 import { FAMILY_MEMBER_FIELDS } from './familyMemberFields'
 
 interface FamilyMembersTabProps {

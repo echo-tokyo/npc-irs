@@ -1,19 +1,26 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AppLayout from '@/components/AppLayout'
-import DashboardPage from '@/pages/DashboardPage'
-import RecordCardPage from '@/pages/RecordCardPage'
-import RecordsTablePage from '@/pages/RecordsTablePage'
+import PageLoading from '@/components/PageLoading'
+
+// Каждая страница — свой JS-чанк, подгружаемый только при переходе на неё,
+// а не одним общим бандлом при первой загрузке приложения.
+const RecordsTablePage = lazy(() => import('@/pages/RecordsTablePage'))
+const RecordCardPage = lazy(() => import('@/pages/RecordCardPage'))
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<RecordsTablePage />} />
-          <Route path='citizens/:id' element={<RecordCardPage />} />
-          <Route path='dashboard' element={<DashboardPage />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<RecordsTablePage />} />
+            <Route path='citizens/:id' element={<RecordCardPage />} />
+            <Route path='dashboard' element={<DashboardPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }

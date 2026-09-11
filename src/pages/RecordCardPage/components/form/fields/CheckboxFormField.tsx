@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import type { FormFieldConfig } from '@/types/formField'
@@ -26,4 +27,4 @@ function CheckboxFormField({
   )
 }
 
-export default CheckboxFormField
+export default memo(CheckboxFormField)

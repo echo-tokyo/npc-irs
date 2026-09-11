@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -41,4 +42,4 @@ function RadioFormField({
   )
 }
 
-export default RadioFormField
+export default memo(RadioFormField)

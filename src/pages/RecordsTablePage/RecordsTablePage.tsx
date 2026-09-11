@@ -14,7 +14,7 @@ import { useRecordsTableFilters } from './hooks/useRecordsTableFilters'
 function RecordsTablePage() {
   const navigate = useNavigate()
   const filters = useRecordsTableFilters()
-  const districts = useDistricts()
+  const { districts } = useDistricts()
   const { citizens, isLoading } = useCitizens({
     search: filters.search,
     status: filters.status,

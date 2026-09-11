@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import TextField from '@mui/material/TextField'
 import type { FormFieldConfig } from '@/types/formField'
 
@@ -26,4 +27,4 @@ function TextFormField({ config, value, error, onChange }: TextFormFieldProps) {
   )
 }
 
-export default TextFormField
+export default memo(TextFormField)

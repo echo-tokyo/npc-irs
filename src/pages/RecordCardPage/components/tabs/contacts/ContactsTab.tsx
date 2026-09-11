@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid'
-import FormField from '@/components/form/FormField'
 import type { ContactInfo } from '@/types/citizen'
 import type { FormFieldValue } from '@/types/formField'
 import { asFieldValues, validateFields } from '@/utils/formValidation'
+import FormField from '../../form/FormField'
 import { CONTACTS_FIELDS } from './contactsFields'
 
 interface ContactsTabProps {

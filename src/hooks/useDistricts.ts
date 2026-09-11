@@ -1,11 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { getDistricts } from '@/services/citizensService'
 
-export function useDistricts(): string[] {
+interface UseDistrictsResult {
+  districts: string[]
+  isLoading: boolean
+}
+
+export function useDistricts(): UseDistrictsResult {
   const query = useQuery({
     queryKey: ['districts'],
     queryFn: getDistricts,
   })
 
-  return query.data ?? []
+  return { districts: query.data ?? [], isLoading: query.isLoading }
 }
