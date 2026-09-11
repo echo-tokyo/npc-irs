@@ -4,15 +4,24 @@ import type { Citizen } from '@/types/citizen'
 
 interface UseCitizensResult {
   citizens: Citizen[]
+  rowCount: number
   isLoading: boolean
 }
 
-export function useCitizens(filter: CitizensFilter): UseCitizensResult {
+export function useCitizens(
+  filter: CitizensFilter,
+  page: number,
+  pageSize: number,
+): UseCitizensResult {
   const query = useQuery({
-    queryKey: ['citizens', filter],
-    queryFn: () => getCitizens(filter),
+    queryKey: ['citizens', filter, page, pageSize],
+    queryFn: () => getCitizens(filter, page, pageSize),
     placeholderData: keepPreviousData,
   })
 
-  return { citizens: query.data ?? [], isLoading: query.isFetching }
+  return {
+    citizens: query.data?.rows ?? [],
+    rowCount: query.data?.rowCount ?? 0,
+    isLoading: query.isFetching,
+  }
 }

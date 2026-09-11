@@ -8,6 +8,11 @@ export interface CitizensFilter {
   district?: string
 }
 
+export interface CitizensPage {
+  rows: Citizen[]
+  rowCount: number
+}
+
 const SIMULATED_LATENCY_MS = 300
 
 function matchesFilter(citizen: Citizen, filter: CitizensFilter): boolean {
@@ -43,10 +48,19 @@ function matchesFilter(citizen: Citizen, filter: CitizensFilter): boolean {
 }
 
 export async function getCitizens(
-  filter: CitizensFilter = {},
-): Promise<Citizen[]> {
+  filter: CitizensFilter,
+  page: number,
+  pageSize: number,
+): Promise<CitizensPage> {
   await delay(SIMULATED_LATENCY_MS)
-  return citizensMock.filter((citizen) => matchesFilter(citizen, filter))
+  const matched = citizensMock.filter((citizen) =>
+    matchesFilter(citizen, filter),
+  )
+  const start = page * pageSize
+  return {
+    rows: matched.slice(start, start + pageSize),
+    rowCount: matched.length,
+  }
 }
 
 export async function getDistricts(): Promise<string[]> {

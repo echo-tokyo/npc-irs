@@ -13,9 +13,9 @@ function App() {
       <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<RecordsTablePage />} />
+            <Route index element={<DashboardPage />} />
+            <Route path='citizens' element={<RecordsTablePage />} />
             <Route path='citizens/:id' element={<RecordCardPage />} />
-            <Route path='dashboard' element={<DashboardPage />} />
           </Route>
         </Routes>
       </Suspense>

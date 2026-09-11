@@ -15,11 +15,15 @@ function RecordsTablePage() {
   const navigate = useNavigate()
   const filters = useRecordsTableFilters()
   const { districts } = useDistricts()
-  const { citizens, isLoading } = useCitizens({
-    search: filters.search,
-    status: filters.status,
-    district: filters.district,
-  })
+  const { citizens, rowCount, isLoading } = useCitizens(
+    {
+      search: filters.search,
+      status: filters.status,
+      district: filters.district,
+    },
+    filters.paginationModel.page,
+    filters.paginationModel.pageSize,
+  )
 
   function handleRowClick(params: GridRowParams<Citizen>) {
     navigate(`/citizens/${params.id}`)
@@ -50,7 +54,7 @@ function RecordsTablePage() {
         />
 
         <Typography variant='body2' color='text.secondary'>
-          Всего найдено: {citizens.length}
+          Всего найдено: {rowCount}
         </Typography>
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
@@ -61,6 +65,8 @@ function RecordsTablePage() {
             density='compact'
             disableRowSelectionOnClick
             onRowClick={handleRowClick}
+            paginationMode='server'
+            rowCount={rowCount}
             paginationModel={filters.paginationModel}
             onPaginationModelChange={filters.setPaginationModel}
             pageSizeOptions={[25, 50, 100]}

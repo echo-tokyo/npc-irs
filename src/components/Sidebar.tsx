@@ -19,11 +19,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Картотека', icon: <TableRowsIcon fontSize='small' /> },
+  { to: '/', label: 'Дашборд', icon: <DashboardIcon fontSize='small' /> },
   {
-    to: '/dashboard',
-    label: 'Дашборд',
-    icon: <DashboardIcon fontSize='small' />,
+    to: '/citizens',
+    label: 'Картотека',
+    icon: <TableRowsIcon fontSize='small' />,
   },
 ]
 
