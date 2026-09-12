@@ -1,4 +1,5 @@
-import Box from '@mui/material/Box'
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined'
+import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
@@ -9,22 +10,12 @@ function SidebarLogo() {
       spacing={1.5}
       sx={{ px: 3, py: 3, alignItems: 'center' }}
     >
-      <Box
-        sx={{
-          width: 38,
-          height: 38,
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, #2065d1 0%, #673ab7 100%)',
-          boxShadow: '0 8px 16px 0 rgba(32, 101, 209, 0.24)',
-        }}
+      <Avatar
+        variant='rounded'
+        sx={{ width: 36, height: 36, bgcolor: 'primary.main' }}
       >
-        <Typography sx={{ color: 'common.white', fontWeight: 700 }}>
-          Р
-        </Typography>
-      </Box>
+        <AssignmentIndOutlinedIcon fontSize='small' />
+      </Avatar>
       <Typography variant='h6'>Реестр граждан</Typography>
     </Stack>
   )
